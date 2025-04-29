@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+      "target": "ES2022",
+      "module": "ESNext",
+      "moduleResolution": "NodeNext",
+      "strict": true,
+      "esModuleInterop": true,
+      "skipLibCheck": true,
+      "forceConsistentCasingInFileNames": true,
+      "baseUrl": ".",
+      "paths": {
+        "@mcp/*": ["packages/*/src"],
+        "@shared/*": ["libs/shared-utils/src/*"]
+      }
+    },
+    "exclude": ["**/node_modules", "**/dist"]
+  }

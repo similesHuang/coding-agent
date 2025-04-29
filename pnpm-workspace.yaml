@@ -1,0 +1,5 @@
+packages:
+  - 'app/*'
+  - 'packages/*'
+  - 'libs/*'
+  - '!**/node_modules/**'  # 显式排除 node_modules
