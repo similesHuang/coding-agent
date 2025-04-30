@@ -1,5 +1,6 @@
+# pnpm-workspace.yaml
 packages:
   - 'app/*'
-  - 'packages/*'
+  - 'packages/*'          # 包含所有一级子目录
   - 'libs/*'
-  - '!**/node_modules/**'  # 显式排除 node_modules
+  - '!**/node_modules/**'
