@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    
+    "prebuild": "cd packages/core && pnpm run build",
+    "build:weather": "cd packages/weather-server && pnpm run build",
+    "build": "pnpm run build:weather"
   },
   "keywords": [],
   "author": "",

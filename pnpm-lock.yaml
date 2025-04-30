@@ -16,6 +16,13 @@ importers:
       zod:
         specifier: ^3.24.3
         version: 3.24.3
+    devDependencies:
+      '@types/node':
+        specifier: ^22.15.3
+        version: 22.15.3
+      typescript:
+        specifier: ^5.8.3
+        version: 5.8.3
 
   packages/weather-server:
     dependencies:
