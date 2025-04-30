@@ -24,7 +24,7 @@ importers:
         version: link:../core
     devDependencies:
       '@types/node':
-        specifier: ^22.14.1
+        specifier: ^22.15.3
         version: 22.15.3
       typescript:
         specifier: ^5.8.3
