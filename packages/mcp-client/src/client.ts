@@ -85,7 +85,6 @@ export class MCPClient {
       });
       const assistantMessage = response.choices[0].message;
       let result = assistantMessage.content;
-       console.log('@@@',assistantMessage.tool_calls)
       // 处理工具调用
       if (assistantMessage?.tool_calls?.length ?? 0 > 0) {
          const toolResults:ToolMessage[] = [];
@@ -94,9 +93,8 @@ export class MCPClient {
              // 通过mcp执行工具
               const toolResult = await this.mcp.callTool({
                 name:toolcall.function.name,
-                input:JSON.parse(toolcall.function.arguments),
+                arguments:JSON.parse(toolcall.function.arguments),
               });
-              console.log('toolresult',toolResult)
               toolResults.push({
                 role: "tool",
                 name: toolcall.function.name,
