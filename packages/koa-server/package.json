@@ -14,7 +14,8 @@
   "dependencies": {
     "@koa/router": "^13.1.0",
     "koa-bodyparser": "^4.4.1",
-    "koa-static": "^5.0.0"
+    "koa-static": "^5.0.0",
+    "@mcp/mcp-client": "workspace:*"
   },
   "devDependencies": {
     "@types/koa": "^2.15.0",

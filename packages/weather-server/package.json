@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "type": "module",
+  
   "scripts": {
     "prebuild": "cd ../core && pnpm run build",
     "dev": "npm run build && node build/index.js" ,

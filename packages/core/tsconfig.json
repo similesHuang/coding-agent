@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "outDir": "dist",
+    "outDir": "build",
     "rootDir": "src",
     "target": "ES2022",
     "module": "Node16",
