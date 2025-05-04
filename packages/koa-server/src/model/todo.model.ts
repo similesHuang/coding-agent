@@ -1,42 +1,24 @@
-import { Todo, CreateTodoDTO, UpdateTodoDTO } from '../type/todo.type';
-import fs from 'fs';
+import { Todo } from '../type/todo.type';
+import { readJsonFile, writeJsonFile } from '../utils/fs.utils';
 import path from 'path';
 
 const DATA_PATH = path.join(__dirname, '../data/todo.json');
+// 纯IO操作函数（无业务逻辑）
+export const loadTodos = (): Promise<Todo[]> => 
+  readJsonFile<Todo[]>(DATA_PATH).catch(() => []);
 
-// 纯函数：读取数据
-const readTodos = (): Todo[] => {
-  try {
-    const data = fs.readFileSync(DATA_PATH, 'utf-8');
-    return JSON.parse(data);
-  } catch (error) {
-    console.error('Error reading todos:', error);
-    return [];
-  }
-};
+export const saveTodos = (todos: Todo[]): Promise<void> => 
+  writeJsonFile(DATA_PATH, todos);
 
-// 纯函数：写入数据
-const writeTodos = (todos: Todo[]): void => {
-  fs.writeFileSync(DATA_PATH, JSON.stringify(todos, null, 2));
-};
+// 辅助函数（纯函数）
+export const findTodo = (todos: Todo[], id: number): Todo | undefined =>
+  todos.find(t => t.id === id);
 
-// 纯函数：生成新ID
-const generateNewId = (todos: Todo[]): number => 
-  todos.length > 0 ? Math.max(...todos.map(t => t.id)) + 1 : 1;
+export const insertTodo = (todos: Todo[], todo: Todo): Todo[] =>
+  [...todos, todo];
 
-// 纯函数：创建新Todo项
-const createNewTodo = (dto: CreateTodoDTO, todos: Todo[]): Todo => ({
-  id: generateNewId(todos),
-  title: dto.title,
-  completed: false
-});
+export const updateTodo = (todos: Todo[], id: number, patch: Partial<Todo>): Todo[] =>
+  todos.map(t => t.id === id ? { ...t, ...patch } : t);
 
-// 纯函数：更新Todo项
-const updateTodoItem = (todo: Todo, dto: UpdateTodoDTO): Todo => ({
-  ...todo,
-  ...dto
-});
-
-// 纯函数：删除Todo项
-const removeTodoItem = (id: number, todos: Todo[]): Todo[] =>
+export const deleteTodo = (todos: Todo[], id: number): Todo[] =>
   todos.filter(t => t.id !== id);

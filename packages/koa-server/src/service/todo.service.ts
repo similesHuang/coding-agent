@@ -1,75 +1,53 @@
+import * as repo from '../model/todo.model';
 import { Todo, CreateTodoDTO, UpdateTodoDTO } from '../type/todo.type';
-import fs from 'fs';
-import path from 'path';
 
-const DATA_PATH = path.join(__dirname, '../data/todo.json');
+// 纯业务函数（无副作用）
+export const validateTodo = (dto: CreateTodoDTO): boolean =>
+  !!dto.title?.trim();
 
-const readData = (): Todo[] => {
-  try {
-    const data = fs.readFileSync(DATA_PATH, 'utf-8');
-    return JSON.parse(data);
-  } catch (error) {
-    // 文件不存在时返回空数组
-    return [];
-  }
+export const generateTodo = (dto: CreateTodoDTO, todos: Todo[]): Todo => ({
+  id: Math.max(0, ...todos.map(t => t.id)) + 1,
+  title: dto.title,
+  completed: dto.completed || false
+});
+
+// 组合业务与持久化操作
+export const getTodos = async (): Promise<Todo[]> => 
+  await repo.loadTodos();
+
+export const getTodo = async (id: number): Promise<Todo | null> => {
+  const todos = await repo.loadTodos();
+  return repo.findTodo(todos, id) || null;
 };
 
-const writeData = (todos: Todo[]): void => {
-  fs.writeFileSync(DATA_PATH, JSON.stringify(todos, null, 2));
-};
-
-const generateId = (todos: Todo[]): number => 
-  todos.length > 0 ? Math.max(...todos.map(t => t.id)) + 1 : 1;
-
-// 核心业务函数
-export const findAll = (): Todo[] => readData();
-
-export const findById = (id: number): Todo | undefined => 
-  readData().find(t => t.id === id);
-
-export const create = (dto: CreateTodoDTO): Todo => {
-  const todos = readData();
-  const newTodo: Todo = {
-    id: generateId(todos),
-    title: dto.title,
-    completed: false
-  };
-  writeData([...todos, newTodo]);
+export const createTodo = async (dto: CreateTodoDTO): Promise<Todo> => {
+  if (!validateTodo(dto)) throw new Error('Invalid todo data');
+  
+  const todos = await repo.loadTodos();
+  const newTodo = generateTodo(dto, todos);
+  await repo.saveTodos(repo.insertTodo(todos, newTodo));
   return newTodo;
 };
 
-export const update = (id: number) => (dto: UpdateTodoDTO): Todo | null => {
-  const todos = readData();
-  const index = todos.findIndex(t => t.id === id);
-  
-  if (index === -1) return null;
-  
-  const updatedTodo = { ...todos[index], ...dto };
-  const updatedTodos = [
-    ...todos.slice(0, index),
-    updatedTodo,
-    ...todos.slice(index + 1)
-  ];
-  
-  writeData(updatedTodos);
-  return updatedTodo;
+export const updateTodo = async (
+  id: number,
+  dto: UpdateTodoDTO
+): Promise<Todo | null> => {
+  const todos = await repo.loadTodos();
+  const existing = repo.findTodo(todos, id);
+  if (!existing) return null;
+
+  const updated = { ...existing, ...dto };
+  await repo.saveTodos(repo.updateTodo(todos, id, updated));
+  return updated;
 };
 
-export const deleteById = (id: number): boolean => {
-  const todos = readData();
-  const newTodos = todos.filter(t => t.id !== id);
+export const deleteTodo = async (id: number): Promise<boolean> => {
+  const todos = await repo.loadTodos();
+  const newTodos = repo.deleteTodo(todos, id);
   
   if (newTodos.length === todos.length) return false;
   
-  writeData(newTodos);
+  await repo.saveTodos(newTodos);
   return true;
-};
-
-// 可选：导出为命名空间
-export const TodoModel = {
-  findAll,
-  findById,
-  create,
-  update,
-  deleteById
 };

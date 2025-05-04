@@ -6,7 +6,7 @@ import { successResponse, errorResponse } from '../utils/response';
 // 获取所有待办事项 (函数式导出)
 export const listTodos = async (ctx: Context) => {
   try {
-    const todos = todoService.findAll();
+    const todos =await  todoService.getTodos();
     successResponse(ctx, { data: todos });
   } catch (err) {
     errorResponse(ctx, 'Failed to fetch todos');
@@ -20,7 +20,7 @@ export const getTodo = async (ctx: Context) => {
     return errorResponse(ctx, 'Invalid ID', 400);
   }
 
-  const todo = todoService.findById(id);
+  const todo = await todoService.getTodo(id);
   if (!todo) {
     return errorResponse(ctx, 'Todo not found', 404);
   }
@@ -37,7 +37,7 @@ export const createTodo = async (ctx: Context) => {
   }
 
   try {
-    const newTodo = todoService.create({
+    const newTodo = await todoService.createTodo({
       title: dto.title,
       completed: dto.completed || false
     });
@@ -57,7 +57,7 @@ export const updateTodo = async (ctx: Context) => {
   }
 
   try {
-    const updated = todoService.update(id)(dto);
+    const updated = await todoService.updateTodo(id,dto);
     if (!updated) {
       return errorResponse(ctx, 'Todo not found', 404);
     }
@@ -73,7 +73,7 @@ export const deleteTodo = async (ctx: Context) => {
     }
     
     try{
-         const deleted = todoService.deleteById(id);
+         const deleted =await  todoService.deleteTodo(id);
          successResponse(ctx,{data:deleted});
     }catch(err){ 
          errorResponse(ctx,'Delete failed',500);

@@ -6,6 +6,7 @@ const router = new Router({ prefix: '/todos' });
 router.get('/', todoController.listTodos);
 router.get('/:id', todoController.getTodo);
 router.post('/', todoController.createTodo);
+router.delete('/:id',todoController.deleteTodo);
 // 添加其他路由...
 
 export default router;
