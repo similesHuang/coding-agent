@@ -2,6 +2,13 @@
   "name": "@mcp/mcp-client",
   "version": "1.0.0",
   "type": "module",
+  "types": "build/index.d.ts",
+  "exports":{
+    ".":{
+       "import":"./build/index.js",
+       "types":"./build/index.d.ts"
+    }
+  },
   "scripts": {
     "build": "tsc && chmod 755 build/index.js"
   },
