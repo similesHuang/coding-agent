@@ -22,7 +22,7 @@ export class MCPClient {
   private mcp: Client;
   private qianwen: OpenAI; // 使用OpenAI兼容客户端
   private transport: StdioClientTransport | null = null;
-  private tools: any[] = []; // 工具列表（类型需适配阿里云格式）
+  public tools: any[] = []; // 工具列表（类型需适配阿里云格式）
 
   constructor() {
     this.qianwen = new OpenAI({

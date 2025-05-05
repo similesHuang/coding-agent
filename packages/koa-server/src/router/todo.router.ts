@@ -1,7 +1,7 @@
 import Router from '@koa/router';
 import * as todoController from '../controller/todo.controller';
 
-const router = new Router({ prefix: '/todos' });
+const router = new Router({ prefix: '/api/todos' });
 
 router.get('/', todoController.listTodos);
 router.get('/:id', todoController.getTodo);
