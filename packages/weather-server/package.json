@@ -1,9 +1,9 @@
 {
   "name": "@mcp/weather-server",
   "version": "1.0.0",
-  "main": "index.js",
-  "type": "module",
-  
+  "main": "build/index.js",
+  "type": "commonjs",
+  "types": "build/index.d.ts",
   "scripts": {
     "prebuild": "cd ../core && pnpm run build",
     "dev": "npm run build && node build/index.js" ,

@@ -3,14 +3,9 @@ import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js"
 import OpenAI from "openai"; // 使用兼容OpenAI的SDK
 import readline from "readline/promises";
 import dotenv from "dotenv";
-import { fileURLToPath } from 'url';
-import { dirname, resolve } from 'path';
+import {  resolve } from 'path';
 import { error } from "console";
 import { ToolMessage } from "./types.js";
-
-// 获取当前文件的目录路径
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
 
 // 加载环境变量
 dotenv.config({

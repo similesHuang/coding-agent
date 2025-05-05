@@ -4,11 +4,12 @@
       "module": "Node16",
       "moduleResolution": "Node16",
       "outDir": "./build",
-      "rootDir": "./",
+      "rootDir": "./src",
       "strict": true,
       "esModuleInterop": true,
       "skipLibCheck": true,
-      "forceConsistentCasingInFileNames": true
+      "forceConsistentCasingInFileNames": true,
+      "declaration": true, // 生成 .d.ts
     },
     "include": ["src/**/*"],
     "exclude": ["node_modules"]
