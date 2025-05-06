@@ -1,48 +1,50 @@
+// mcp.service.ts
 import { MCPClient } from "@mcp/mcp-client";
-import { resolve } from 'path';
 
-const instances = new Map<string, MCPClient>();
+interface Connection {
+  client: MCPClient;
+  serverName: string;
+  serverPath: string;
+  connectedAt: Date;
+}
 
-  /**
-   * 获取或创建MCP客户端实例
-   * @param serverPath 服务端脚本路径
-   * @param serverName 可选自定义标识名
-   */
-  const  getClient=async(serverPath: string, serverName?: string)=> {
-    const resolvedPath = resolve(process.cwd(), serverPath);
-    const instanceKey = serverName || resolvedPath;
+const connections = new Map<string, Connection>();
 
-    if (!instances.has(instanceKey)) {
-      const client = new MCPClient();
-      await client.connectToServer(resolvedPath);
-      instances.set(instanceKey, client);
-    }
-
-    return instances.get(instanceKey)!;
+export const createConnection = async (serverPath: string, serverName: string) => {
+  if (connections.has(serverName)) {
+    throw new Error(`Connection ${serverName} already exists`);
   }
 
-  /**
-   * 获取所有活跃连接
-   */
-  const  listConnections= ()=> {
-    return Array.from(instances.entries()).map(([key, client]) => ({
-      name: key,
-      tools: client.tools.map(t => t.function.name)
-    }));
+  const client = new MCPClient();
+  const isConnected = await client.connectToServer(serverPath);
+  
+  if (!isConnected) {
+    throw new Error('Failed to connect to MCP server');
   }
 
-  /**
-   * 安全关闭连接
-   */
-  const  cleanup= async (instanceKey: string)=> {
-    const client = instances.get(instanceKey);
-    if (client) {
-      await client.cleanup();
-      instances.delete(instanceKey);
-    }
+  const connection = {
+    client,
+    serverName,
+    serverPath,
+    connectedAt: new Date()
+  };
+
+  connections.set(serverName, connection);
+  return client;
+}
+
+export const getConnection = (serverName: string) => {
+  return connections.get(serverName)?.client;
+}
+
+export const listConnections = () => {
+  return Array.from(connections.values());
+}
+
+export const closeConnection = async (serverName: string) => {
+  const connection = connections.get(serverName);
+  if (connection) {
+    await connection.client.cleanup();
+    connections.delete(serverName);
   }
-export {
-    getClient,
-    listConnections,
-    cleanup
 }

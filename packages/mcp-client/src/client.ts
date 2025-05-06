@@ -70,6 +70,7 @@ export class MCPClient {
     } catch (e) {
       console.error("无法连接到MCP服务器:", e);
     }
+    return false;
   }
 
   // 处理查询（适配阿里云千问API）

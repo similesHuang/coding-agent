@@ -4,5 +4,5 @@ export interface MCPConnection {
 }
 export interface MCPQuery {
   query: string;
- 
-}
+  serverName?:string;
+} 
