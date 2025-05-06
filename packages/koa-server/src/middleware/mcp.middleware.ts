@@ -16,7 +16,7 @@ declare module 'koa' {
 export const mcpContext = () => {
   return async (ctx: Context, next: Next) => {
     const { serverPath, serverName } = ctx.request.body as MCPConnection;
-    
+     console.log('mcpContext', serverPath, serverName);
     if (!serverPath) {
       ctx.throw(400, 'Missing serverPath in request body');
       return;

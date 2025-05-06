@@ -1,4 +1,4 @@
-export  { MCPClient } from "./client.js";
+export    { MCPClient } from "./client.js";
 
 // async function main() {
 //   if (process.argv.length < 3) {

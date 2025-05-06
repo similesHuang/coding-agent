@@ -9,10 +9,10 @@ import { ToolMessage } from "./types.js";
 
 // 加载环境变量
 dotenv.config({
-  path: resolve(__dirname, '../../.env')  // 从build/src向上查找
+  path: resolve(__dirname, '../.env')  // 从build/src向上查找
 });
-
 // 设置API Key（阿里云百炼的Key）
+console.log('path',resolve(__dirname, '../.env'))
 const DASHSCOPE_API_KEY = process.env.DASHSCOPE_API_KEY;
 if (!DASHSCOPE_API_KEY) {
   throw new Error("DASHSCOPE_API_KEY 未设置");
@@ -62,6 +62,11 @@ export class MCPClient {
       }));
       
       console.log("已连接到服务器，工具包括:", this.tools.map(tool => tool.function.name));
+      if(this.tools.length>0){
+         return true;
+      }else{
+         return false;
+      }
     } catch (e) {
       console.error("无法连接到MCP服务器:", e);
     }

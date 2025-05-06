@@ -13,9 +13,10 @@
   "license": "ISC",
   "dependencies": {
     "@koa/router": "^13.1.0",
+    "@mcp/mcp-client": "workspace:*",
+    "koa": "^3.0.0",
     "koa-bodyparser": "^4.4.1",
-    "koa-static": "^5.0.0",
-    "@mcp/mcp-client": "workspace:*"
+    "koa-static": "^5.0.0"
   },
   "devDependencies": {
     "@types/koa": "^2.15.0",
