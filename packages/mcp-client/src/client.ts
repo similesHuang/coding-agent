@@ -35,7 +35,7 @@ export class MCPClient {
   // 连接MCP服务器（保持不变）
   async connectToServer(serverScriptPath: string) {
     try {
-      const isJS = serverScriptPath.endsWith(".js");
+      const isJS = serverScriptPath.endsWith(".js")||serverScriptPath.endsWith(".cjs");
       if (!isJS) {
         throw new Error("服务器脚本必须是js文件");
       }

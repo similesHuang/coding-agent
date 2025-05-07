@@ -1,0 +1,44 @@
+{
+  "name": "@mcp/infra-server",
+  "version": "1.0.22",
+  "type": "commonjs",
+  "description": "An MCP service for infra ui components query | 一个帮助生成业务组件代码的MCP服务，包含系统提示词、组件文档、API 文档、代码示例和更新日志查询",
+  "bin": "dist/cli.js",
+
+  "scripts": {
+    "start": "node dist/cli.js",
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "pretest": "tsup",
+    "test": "tsx test-server.ts",
+    "extract": "tsx cli.ts extract ../../..//ui库/infra-ui",
+    "inspector": "pnpm build & npx @modelcontextprotocol/inspector node dist/cli.js",
+    "prepublishOnly": "pnpm build"
+  },
+  "keywords": [
+    "mcp",
+    "infra-ui",
+    "model context protocol",
+    "ui components"
+  ],
+  "files": [
+    "dist",
+    "componentData",
+    "README.md",
+    "README.zh-CN.md"
+  ],
+  "dependencies": {
+    "@mcp/core": "workspace:*",
+    "to-vfile": "^8.0.0",
+    "vfile-matter": "^5.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.14",
+    "tsup": "^8.4.0",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.2"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}
