@@ -25,10 +25,9 @@ export const addConnection = async (ctx: Context) => {
 export const processQuery = async (ctx: Context) => {
   const { query } = ctx.request.body as MCPQuery;
   const { client, serverName } = ctx.state.mcp;
-  debugger;
   console.log('processQuery', query);
   try {
-    const response = await client.processQuery(query);
+    const response = await MCPService.processQuery(query, client,ctx);
     ctx.body = { 
       success: true,
       response,

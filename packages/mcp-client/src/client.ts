@@ -5,7 +5,7 @@ import readline from "readline/promises";
 import dotenv from "dotenv";
 import {  resolve } from 'path';
 import { error } from "console";
-import { ToolMessage } from "./types.js";
+
 
 // 加载环境变量
 dotenv.config({
@@ -19,9 +19,9 @@ if (!DASHSCOPE_API_KEY) {
 }
 
 export class MCPClient {
-  private mcp: Client;
-  private qianwen: OpenAI; // 使用OpenAI兼容客户端
-  private transport: StdioClientTransport | null = null;
+  public mcp: Client;
+  public qianwen: OpenAI; // 使用OpenAI兼容客户端
+  public transport: StdioClientTransport | null = null;
   public tools: any[] = []; // 工具列表（类型需适配阿里云格式）
 
   constructor() {
@@ -74,89 +74,89 @@ export class MCPClient {
   }
 
   // 处理查询（适配阿里云千问API）
-  async processQuery(query: string) {
-    try {
-      const response = await this.qianwen.chat.completions.create({
-        model: "qwen-max", // 模型名称：qwen-max/qwen-plus等
-        messages: [
-          { role: "system", content: "你是一个有帮助的助手。" },
-          { role: "user", content: query },
-        ],
-        tools: this.tools.length > 0 ? this.tools : undefined,
-      });
-      const assistantMessage = response.choices[0].message;
-      let result = assistantMessage.content;
-      // 处理工具调用
-      if (assistantMessage?.tool_calls?.length ?? 0 > 0) {
-         const toolResults:ToolMessage[] = [];
-         for(const toolcall of assistantMessage?.tool_calls ?? []){
-           try{
-             // 通过mcp执行工具
-              const toolResult = await this.mcp.callTool({
-                name:toolcall.function.name,
-                arguments:JSON.parse(toolcall.function.arguments),
-              });
-              toolResults.push({
-                role: "tool",
-                name: toolcall.function.name,
-                content: JSON.stringify(toolResult),
-                tool_call_id: toolcall.id, // 必须提供工具调用ID
-              });
-           }catch(err){
-             console.log(`执行工具 ${toolcall.function.name} 失败:`, error)
-             toolResults.push({
-              role: "tool",
-              name: toolcall.function.name,
-              content: JSON.stringify({ err}),
-              tool_call_id:toolcall.id
-            });
-           }
+  // async processQuery(query: string) {
+  //   try {
+  //     const response = await this.qianwen.chat.completions.create({
+  //       model: "qwen-max", // 模型名称：qwen-max/qwen-plus等
+  //       messages: [
+  //         { role: "system", content: "你是一个有帮助的助手。" },
+  //         { role: "user", content: query },
+  //       ],
+  //       tools: this.tools.length > 0 ? this.tools : undefined,
+  //     });
+  //     const assistantMessage = response.choices[0].message;
+  //     let result = assistantMessage.content;
+  //     // 处理工具调用
+  //     if (assistantMessage?.tool_calls?.length ?? 0 > 0) {
+  //        const toolResults:ToolMessage[] = [];
+  //        for(const toolcall of assistantMessage?.tool_calls ?? []){
+  //          try{
+  //            // 通过mcp执行工具
+  //             const toolResult = await this.mcp.callTool({
+  //               name:toolcall.function.name,
+  //               arguments:JSON.parse(toolcall.function.arguments),
+  //             });
+  //             toolResults.push({
+  //               role: "tool",
+  //               name: toolcall.function.name,
+  //               content: JSON.stringify(toolResult),
+  //               tool_call_id: toolcall.id, // 必须提供工具调用ID
+  //             });
+  //          }catch(err){
+  //            console.log(`执行工具 ${toolcall.function.name} 失败:`, error)
+  //            toolResults.push({
+  //             role: "tool",
+  //             name: toolcall.function.name,
+  //             content: JSON.stringify({ err}),
+  //             tool_call_id:toolcall.id
+  //           });
+  //          }
            
-         }
+  //        }
 
-        // 将工具结果发送回模型
-        const toolResponse = await this.qianwen.chat.completions.create({
-          model: "qwen-max",
-          messages: [
-            { role: "user", content: query },
-            assistantMessage,
-            ...toolResults,
-          ] as const,
-          tools: this.tools,
-        });
-        result = toolResponse.choices[0].message.content;
-      }
+  //       // 将工具结果发送回模型
+  //       const toolResponse = await this.qianwen.chat.completions.create({
+  //         model: "qwen-max",
+  //         messages: [
+  //           { role: "user", content: query },
+  //           assistantMessage,
+  //           ...toolResults,
+  //         ] as const,
+  //         tools: this.tools,
+  //       });
+  //       result = toolResponse.choices[0].message.content;
+  //     }
   
         
-      return result;
-    } catch (error) {
-      console.error("调用千问API出错:", error);
-      throw error;
-    }
-  }
+  //     return result;
+  //   } catch (error) {
+  //     console.error("调用千问API出错:", error);
+  //     throw error;
+  //   }
+  // }
 
-  async chatLoop() {
-    const rl = readline.createInterface({
-      input: process.stdin,
-      output: process.stdout,
-    });
+  // async chatLoop() {
+  //   const rl = readline.createInterface({
+  //     input: process.stdin,
+  //     output: process.stdout,
+  //   });
   
-    try {
-      console.log("\nMCP 客户端已启动！");
-      console.log("输入你的查询或输入 'quit' 退出。");
+  //   try {
+  //     console.log("\nMCP 客户端已启动！");
+  //     console.log("输入你的查询或输入 'quit' 退出。");
   
-      while (true) {
-        const message = await rl.question("\n查询: ");
-        if (message.toLowerCase() === "quit") {
-          break;
-        }
-        const response = await this.processQuery(message);
-        console.log("\n" + response);
-      }
-    } finally {
-      rl.close();
-    }
-  }
+  //     while (true) {
+  //       const message = await rl.question("\n查询: ");
+  //       if (message.toLowerCase() === "quit") {
+  //         break;
+  //       }
+  //       const response = await this.processQuery(message);
+  //       console.log("\n" + response);
+  //     }
+  //   } finally {
+  //     rl.close();
+  //   }
+  // }
   
   async cleanup() {
     await this.mcp.close();
