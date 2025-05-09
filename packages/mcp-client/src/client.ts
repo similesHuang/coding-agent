@@ -4,7 +4,6 @@ import OpenAI from "openai"; // 使用兼容OpenAI的SDK
 import readline from "readline/promises";
 import dotenv from "dotenv";
 import {  resolve } from 'path';
-import { error } from "console";
 
 
 // 加载环境变量

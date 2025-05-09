@@ -247,70 +247,42 @@ async function processComponent(componentsPath: string, dirName: string) {
 async function extractAllData(antdRepoPath: string) {
   // 确保数据目录存在
   await mkdir(EXTRACTED_DATA_DIR, { recursive: true });
-  /** 待提取数据的组件目录 */
-  const componentsPath = join(antdRepoPath, "components");
-  /** 待提取数据的组件库 packageJson */
-  const antDPackageJsonPath = join(antdRepoPath, "package.json");
-  /** 待提取数据的组件库 changelog */
-  const antDChangelogPath = join(
-    antdRepoPath,
-    ".dumi",
-    "preset",
-    EXTRACT_COMPONENTS_CHANGELOG_PATH
-  );
+  /** 进入业务组件*/
+  const BComponentsPath = join(antdRepoPath, "docs/BComponents");
+  
+  console.log(`🔍 从 ${BComponentsPath} 抓取文档信息`);
 
-  console.log(`🔍 从 ${componentsPath} 抓取文档信息`);
-
-  if (!existsSync(componentsPath)) {
+  if (!existsSync(BComponentsPath)) {
     console.error(
-      `❌ 错误: 未找到 ${componentsPath} 目录，请传入正确的 Ant Design 目录。`
+      `❌ 错误: 未找到 ${BComponentsPath} 目录，请传入正确的 infra-ui 目录。`
     );
     process.exit(1);
   }
 
-  if (!existsSync(antDPackageJsonPath)) {
-    console.error(
-      `❌ 提取 changelog 错误: 未找到 ${antDPackageJsonPath} 文件，请进入正确的 Ant Design 目录并执行 npm run lint:changelog 脚本`
-    );
-  } else {
-    try {
-      await writeJsonFile(
-        EXTRACTED_COMPONENTS_DATA_CHANGELOG_PATH,
-        await readFile(antDChangelogPath, "utf-8").then((content) =>
-          JSON.parse(content)
-        )
-      );
-    } catch (error) {
-      console.error(
-        `  ❌ 写入 changelog 错误:`,
-        (error as Error).message,
-        "使用内置的更新日志"
-      );
-    }
-  }
 
-  /** 获取所有组件目录 */
-  const componentEntries = await readdir(componentsPath, {
+  /** 获取所有业务组件目录,包含多个.md文件和一个components目录 */
+  const BComponentEntries = await readdir(BComponentsPath, {
     withFileTypes: true,
   });
-  /** 有效的组件目录 */
-  const componentDirs = componentEntries.filter(
-    (entry) =>
-      entry.isDirectory() &&
-      !entry.name.startsWith(".") &&
-      !entry.name.startsWith("_") &&
-      entry.name !== "locale" &&
-      entry.name !== "style" &&
-      entry.name !== "version"
-  );
 
-  console.log(`🙈 共找到 ${componentDirs.length} 个潜在组件\n`);
+   // 业务组件.md文件目录
+   const BComponentsMD = BComponentEntries.filter(
+    (entry)=>!entry.isDirectory() && entry.name.endsWith(".md")
+   )
+
+   const componentsPath = join(BComponentsPath,'components');
+    // 业务组件目录
+    const BComponentsDirs = await readdir(componentsPath, {
+      withFileTypes: true,
+    });
+
+  console.log(`🙈 共找到 ${BComponentsDirs.length} 个潜在组件\n`);
 
   /** 提取的组件数据集合 */
   const componentDataMap: Record<string, ComponentData> = {};
   let processedCount = 0;
 
-  for (const entry of componentDirs) {
+  for (const entry of BComponentsDirs) {
     const componentData = await processComponent(componentsPath, entry.name);
     if (componentData) {
       componentDataMap[componentData.name] = componentData;
@@ -319,7 +291,7 @@ async function extractAllData(antdRepoPath: string) {
   }
 
   console.log(
-    `✅ 成功处理了 ${processedCount} 个组件，共 ${componentDirs.length} 个`
+    `✅ 成功处理了 ${processedCount} 个组件，共 ${BComponentsDirs.length} 个`
   );
 
   /** 提取数据的操作结果 */
