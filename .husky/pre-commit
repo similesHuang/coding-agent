@@ -1,3 +1,5 @@
+. "$(dirname -- "$0")/_/husky.sh"
+# app 目录在项目根目录下
 cd app && npm run pre-check
-cd app &&npm run lint:style
-cd ..
+cd "$(git rev-parse --show-toplevel)/app" && npm run lint:style
+cd "$(git rev-parse --show-toplevel)"
