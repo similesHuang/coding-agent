@@ -1,0 +1,2 @@
+npm run pre-check
+npm run lint:style
