@@ -3,8 +3,8 @@ const { parentPort, workerData } = require('worker_threads');
 // 初始状态
 const state = {
     messageHistory: workerData.messageHistory || [],
-    currentRound: 0,  // 修正拼写错误 (currentData → currentRound)
-    maxRounds: 5,     // 修正拼写错误 (maxRound → maxRounds)
+    currentRound: 0, 
+    maxRounds: 5,    
     pendingToolCalls: [],
     toolResults: [],
     initialQuery: workerData.initialQuery,
