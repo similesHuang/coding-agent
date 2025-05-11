@@ -1,2 +1,3 @@
-npm run pre-check
-npm run lint:style
+cd app && npm run pre-check
+cd app &&npm run lint:style
+cd ..
