@@ -4,15 +4,15 @@
   "main": "index.js",
   "module": "type",
   "scripts": {
-    "dev:dev": "cross-env NODE_ENV=development BASE_ENV=development webpack-dev-server -c build/webpack.dev.js",
-    "dev:test": "cross-env NODE_ENV=development BASE_ENV=test webpack-dev-server -c build/webpack.dev.js",
-    "dev:pre": "cross-env NODE_ENV=development BASE_ENV=pre webpack-dev-server -c build/webpack.dev.js",
-    "dev:prod": "cross-env NODE_ENV=development BASE_ENV=production webpack-dev-server -c build/webpack.dev.js",
-    "build:dev": "cross-env NODE_ENV=production BASE_ENV=development webpack -c build/webpack.prod.js",
-    "build:test": "cross-env NODE_ENV=production BASE_ENV=test webpack -c build/webpack.prod.js",
-    "build:pre": "cross-env NODE_ENV=production BASE_ENV=pre webpack -c build/webpack.prod.js",
-    "build:prod": "cross-env NODE_ENV=production BASE_ENV=production webpack -c build/webpack.prod.js",
-    "build:analy": "cross-env NODE_ENV=production BASE_ENV=production webpack -c build/webpack.analy.js",
+    "dev:dev": "cross-env NODE_ENV=development BASE_ENV=development webpack-dev-server -c config/webpack.dev.js",
+    "dev:test": "cross-env NODE_ENV=development BASE_ENV=test webpack-dev-server -c config/webpack.dev.js",
+    "dev:pre": "cross-env NODE_ENV=development BASE_ENV=pre webpack-dev-server -c config/webpack.dev.js",
+    "dev:prod": "cross-env NODE_ENV=development BASE_ENV=production webpack-dev-server -c config/webpack.dev.js",
+    "build:dev": "cross-env NODE_ENV=production BASE_ENV=development webpack -c config/webpack.prod.js",
+    "build:test": "cross-env NODE_ENV=production BASE_ENV=test webpack -c config/webpack.prod.js",
+    "build:pre": "cross-env NODE_ENV=production BASE_ENV=pre webpack -c config/webpack.prod.js",
+    "build:prod": "cross-env NODE_ENV=production BASE_ENV=production webpack -c config/webpack.prod.js",
+    "build:analy": "cross-env NODE_ENV=production BASE_ENV=production webpack -c config/webpack.analy.js",
     "eslint": "eslint",
     "pre-check": "tsc && npx lint-staged",
     "prepare": "husky",
@@ -76,8 +76,8 @@
   "dependencies": {
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
-     "react-router-dom": "^6.4.3",
-     "antd": "^4.24.12",
+    "react-router-dom": "^6.4.3",
+    "antd": "^4.24.12",
     "lodash": "^4.17.21"
   }
 }
