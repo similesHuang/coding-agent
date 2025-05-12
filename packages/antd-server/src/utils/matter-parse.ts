@@ -1,6 +1,3 @@
-import { read } from "to-vfile";
-import { matter } from "vfile-matter";
-
 interface AntdMDMatter {
   title: string;
   category: string;
@@ -15,13 +12,20 @@ interface AntdMDMatter {
 }
 
 /** 解析 markdown的 meta 信息 */
-export const parseMDMatter = async (filePath: string): Promise<AntdMDMatter | undefined> => {
+export const parseMDMatter = async (
+  filePath: string
+): Promise<AntdMDMatter | undefined> => {
   try {
-    const file = await read(filePath);
-    matter(file);
+    // 使用动态导入替代静态导入
+    const toVfile = await import("to-vfile");
+    const vfileMatter = await import("vfile-matter");
+
+    const file = await toVfile.read(filePath);
+    vfileMatter.matter(file);
 
     return file.data.matter as AntdMDMatter;
   } catch (error) {
-    return undefined
+    console.error(`处理文件 ${filePath} 失败:`, error);
+    return undefined;
   }
 };

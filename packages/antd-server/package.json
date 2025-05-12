@@ -4,7 +4,6 @@
   "type": "commonjs",
   "description": "An MCP service for Ant Design components query | 一个减少 Ant Design 组件代码生成幻觉的 MCP 服务，包含系统提示词、组件文档、API 文档、代码示例和更新日志查询",
   "bin": "dist/cli.js",
-
   "scripts": {
     "start": "node dist/cli.js",
     "build": "tsup",
